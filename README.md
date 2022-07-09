@@ -1,3 +1,3 @@
-# Repository Template-Basic
+# actions
 
-Can be used with `gh repo create trackdocs/some-repo --private --disable-wiki --template trackdocs/template-basic`
+Github actions that probably already exist somewhere.

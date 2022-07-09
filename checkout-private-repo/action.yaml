@@ -1,0 +1,33 @@
+name: Checkout Private Repo
+description: Checkout a private github repository using a deploy key (ssh-key)
+inputs:
+  repository:
+    required: true
+    description: The github respository to clone (owner/repo)
+  ssh-key:
+    required: true
+    description: The ssh key to be used for checking out the repo. This can be your private repo's deploy key!
+  ref:
+    required: false
+    description: The ref to checkout (branch, tag or commit-id)
+    default: ''
+  path:
+    required: false
+    description: The target path where the repository should be cloned to
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout Submodules
+      shell: bash
+      run: |
+        eval `ssh-agent -s`
+        echo "${{ inputs.ssh-key }}" | ssh-add -
+        
+        REF=
+        if [[ ! -z "${{ inputs.ref }}" ]]; then
+          REF="-b ${{ inputs.ref }}"
+        fi
+        
+        git clone $REF git@github.com:${{ inputs.repository }}.git ${{ inputs.path }}
